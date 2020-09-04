@@ -72,9 +72,42 @@ const deleteListing = (req, res) => {
   })
 }
 
+const getAllUsers = (req, res) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not yet defined'
+  })
+}
+const getUser = (req, res) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not yet defined'
+  })
+}
+const postUser = (req, res) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not yet defined'
+  })
+}
+const updateUser = (req, res) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not yet defined'
+  })
+}
+const deleteUser = (req, res) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not yet defined'
+  })
+}
+
 // 3) Routes
 const listingRouter = express.Router();
+const userRouter = express.Router();
 app.use('/api/v1/listings', listingRouter);
+app.use('/api/v1/users', userRouter);
 
 listingRouter
   .route('/')
@@ -86,6 +119,17 @@ listingRouter
   .get(getListing)
   .patch(updateListing)
   .delete(deleteListing)
+  
+userRouter
+  .route('/')
+  .get(getAllUsers)
+  .post(postUser);
+
+userRouter
+  .route('/:id')
+  .get(getUser)
+  .patch(updateUser)
+  .delete(deleteUser)
 
 const port = 5000;
 app.listen(port, () => console.log(`App listening on port ${5000}`))
