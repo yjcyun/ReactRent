@@ -1,8 +1,15 @@
 const Listing = require("../models/listingModel");
+const APIFeatures = require("../utils/apiFeatures");
 
 exports.getAllListings = async (req, res) => {
   try {
-    const listings = await Listing.find();
+    const features = new APIFeatures(Listing.find(), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+
+    const listings = await features.query;
 
     res.status(200).json({
       status: 'success',
