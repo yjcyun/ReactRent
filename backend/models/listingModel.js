@@ -14,20 +14,20 @@ const listingSchema = new mongoose.Schema({
   },
   sqft: {
     type: Number,
-    required: [true, 'This is a required field'],
-    min: [1, 'This field must be greater than 1']
+    // required: [true, 'This is a required field'],
+    // min: [1, 'This field must be greater than 1']
   },
   garage: {
     type: Number,
-    required: [true, 'This is a required field']
+    // required: [true, 'This is a required field']
   },
   bedrooms: {
     type: Number,
-    required: [true, 'This is a required field']
+    // required: [true, 'This is a required field']
   },
   bathrooms: {
     type: Number,
-    required: [true, 'This is a required field']
+    // required: [true, 'This is a required field']
   },
   price: {
     type: Number,
@@ -44,7 +44,7 @@ const listingSchema = new mongoose.Schema({
   },
   imageCover: {
     type: String,
-    required: [true, 'Image cover is required']
+    // required: [true, 'Image cover is required']
   },
   images: [String]
 });
