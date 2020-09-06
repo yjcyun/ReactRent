@@ -3,7 +3,9 @@ const APIFeatures = require("../utils/apiFeatures");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 
+// GET ALL LISTINGS
 exports.getAllListings = catchAsync(async (req, res, next) => {
+  // Query parameters
   const features = new APIFeatures(Listing.find(), req.query)
     .filter()
     .sort()

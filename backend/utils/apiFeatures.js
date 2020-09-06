@@ -4,19 +4,24 @@ class APIFeatures {
       this.queryString = queryString
   };
 
+  // FILTER DATA  ex. ?city=toronto&realtor=james
   filter() {
     const queryObj = { ...this.queryString }; //req.body
+    // excludedFields will be implemented separately...
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach(el => delete queryObj[el]);
 
     let queryStr = JSON.stringify(queryObj);
+    // ex. MongoDB: { price:{ $gte: 5 } } URL: ?price[gte]=5
+    //     Express: { price: { gte: 5 } }
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
 
     this.query = this.query.find(JSON.parse(queryStr));
 
-    return this
+    return this;
   }
 
+  // SORT DATA ex. ?sort=price
   sort() {
     if (this.queryString.sort) {
       const sortBy = this.queryString.sort.split(',').join(' ');
@@ -27,6 +32,7 @@ class APIFeatures {
     return this;
   }
 
+  // LIMIT FIELDS ex. ?fields=address,city
   limitFields() {
     if (this.queryString.fields) {
       const fields = this.queryString.fields.split(',').join(' ');
@@ -37,6 +43,7 @@ class APIFeatures {
     return this;
   }
 
+  // PAGE QUERY
   paginate() {
     // page=3&limit=10 , 1-10 page1, 11-20 page2
     const page = this.queryString.page * 1 || 1;
