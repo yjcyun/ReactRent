@@ -5,7 +5,8 @@ const listingSchema = new mongoose.Schema({
   address: {
     type: String,
     required: [true, 'This is a required field'],
-    trim: true
+    trim: true,
+    unique: true
   },
   city: {
     type: String,

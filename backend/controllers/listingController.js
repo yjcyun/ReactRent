@@ -1,92 +1,71 @@
 const Listing = require("../models/listingModel");
 const APIFeatures = require("../utils/apiFeatures");
+const catchAsync = require("../utils/catchAsync");
+const AppError = require("../utils/appError");
 
-exports.getAllListings = async (req, res) => {
-  try {
-    const features = new APIFeatures(Listing.find(), req.query)
-      .filter()
-      .sort()
-      .limitFields()
-      .paginate();
+exports.getAllListings = catchAsync(async (req, res, next) => {
+  const features = new APIFeatures(Listing.find(), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
 
-    const listings = await features.query;
+  const listings = await features.query;
 
-    res.status(200).json({
-      status: 'success',
-      results: listings.length,
-      data: { listings }
-    })
-  } catch (err) {
-    res.status(404).json({
-      status: 'fail',
-      message: err
-    });
+  res.status(200).json({
+    status: 'success',
+    results: listings.length,
+    data: { listings }
+  })
+})
+
+exports.getListing = catchAsync(async (req, res, next) => {
+  const listing = await Listing.findById(req.params.id);
+
+  if(!listing) {
+    return (new AppError('No listing found with that ID', 404));
   }
-}
 
-exports.getListing = async (req, res) => {
-  try {
-    const listing = await Listing.findById(req.params.id);
+  res.status(200).json({
+    status: 'success',
+    data: { listing }
+  })
+})
 
-    res.status(200).json({
-      status: 'success',
-      data: { listing }
-    })
-  } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      message: err
-    });
+exports.postListing = catchAsync(async (req, res, next) => {
+  const newListing = await Listing.create(req.body);
+
+  res.status(201).json({
+    status: 'success',
+    data: { listing: newListing }
+  });
+});
+
+exports.updateListing = catchAsync(async (req, res, next) => {
+  const listing = await Listing.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true
+  });
+
+  if(!listing) {
+    return (new AppError('No listing found with that ID', 404));
   }
-}
 
-exports.postListing = async (req, res) => {
-  try {
-    const newListing = await Listing.create(req.body);
+  res.status(200).json({
+    status: 'success',
+    data: { listing }
+  });
+})
 
-    res.status(201).json({
-      status: 'success',
-      data: { listing: newListing }
-    })
-  } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      message: err
-    });
+exports.deleteListing = catchAsync(async (req, res, next) => {
+  const listing = await Listing.findByIdAndDelete(req.params.id);
+
+  if(!listing) {
+    return (new AppError('No listing found with that ID', 404));
   }
-}
 
-exports.updateListing = async (req, res) => {
-  try {
-    const listing = await Listing.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true
-    });
-
-    res.status(200).json({
-      status: 'success',
-      data: { listing }
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      message: err
-    });
-  }
-}
-
-exports.deleteListing = async (req, res) => {
-  try {
-    await Listing.findByIdAndDelete(req.params.id);
-
-    res.status(204).json({
-      status: 'success',
-      data: null
-    })
-  } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      message: err
-    })
-  }
-}
+  res.status(204).json({
+    status: 'success',
+    data: null
+  })
+})
